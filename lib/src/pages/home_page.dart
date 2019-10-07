@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:preference_user_app/src/shared_prefs/preferences_user.dart';
 // import 'package:preference_user_app/src/pages/setting_page.dart';
 
 //WIDGETS
@@ -8,23 +9,28 @@ import 'package:preference_user_app/src/widgets/drawer_widget.dart';
 class HomePage extends StatelessWidget {
   
   static final String routeName = 'home';
+  final prefs = new PreferencesUser();
 
   @override
   Widget build(BuildContext context) {
+
+    prefs.page = HomePage.routeName;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Preferences User'),
+        backgroundColor: (prefs.color) ? Colors.teal : Colors.blue,
       ),
       //drawer: _createDrawer(context),
       drawer: DrawerWidget(),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text('Color secundary:'),
+          Text('Color: ${ prefs.color ? 'Secondary' : 'Primary' }'),
           Divider(),
-          Text('Gender:'),
+          Text('Gender: ${ prefs.gender == 1 ? 'Masculino' : 'Femenino' }'),
           Divider(),
-          Text('Name user:'),
+          Text('Name user: ${ prefs.name }'),
           Divider(),
         ],
       ),

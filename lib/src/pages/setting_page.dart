@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:preference_user_app/src/shared_prefs/preferences_user.dart';
 
 //WIDGETS
 import 'package:preference_user_app/src/widgets/drawer_widget.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingPage extends StatefulWidget {
   
@@ -13,17 +15,61 @@ class SettingPage extends StatefulWidget {
 
 class _SettingPageState extends State<SettingPage> {
 
-  bool _colorSecondary = false;
-  int _gender = 1;
-  String _name = '';
+  bool _colorSecondary;
+  int _gender;
+  String _name;
 
   TextEditingController _textEditingController;
+
+  final prefs = new PreferencesUser();
 
   @override
   void initState() {
     super.initState();
+    //_loadPref();
 
-    _textEditingController = new TextEditingController( text: _name );
+    _gender = prefs.gender;
+    _name = prefs.name;
+    _colorSecondary = prefs.color;
+    prefs.page = SettingPage.routeName;
+
+    _textEditingController = new TextEditingController( text: prefs.name );
+  }
+
+  // _loadPref() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  //   _gender = prefs.getInt("gender");
+  //   setState(() {});
+  // }
+
+  _setSelectedRadio( int value ) {
+
+    //SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    prefs.gender = value;
+
+    _gender = value;
+    setState(() {});
+    
+  }
+
+  _setSwitchList( bool value ) {
+    //SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    prefs.color = value;
+
+    _colorSecondary = value;
+    setState(() {});
+  }
+
+  _setTextEdit( String value ) {
+    //SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    prefs.name = value;
+
+    _name = value;
+    setState(() {});
   }
 
   @override
@@ -46,33 +92,21 @@ class _SettingPageState extends State<SettingPage> {
           SwitchListTile(
             value: _colorSecondary,
             title: Text('Color Secondary'),
-            onChanged: ( value ) {
-              setState(() {
-               _colorSecondary = value; 
-              });
-            },
+            onChanged: _setSwitchList,
           ),
 
           RadioListTile(
             value: 1,
             title: Text('Male'),
             groupValue: _gender,
-            onChanged: ( value ) {
-              setState(() {
-                _gender = value;
-              });
-            },
+            onChanged: _setSelectedRadio
           ),
 
           RadioListTile(
             value: 2,
             title: Text('Female'),
             groupValue: _gender,
-            onChanged: ( value ) {
-              setState(() {
-                _gender = value;
-              });
-            },
+            onChanged: _setSelectedRadio,
           ),
 
           Divider(),
@@ -85,9 +119,7 @@ class _SettingPageState extends State<SettingPage> {
                 labelText: 'Name',
                 helperText: 'Name of person using telephone'
               ),
-              onChanged: ( value ) {
-                _name = value;
-              },
+              onChanged: _setTextEdit,
             )
           )
         ],
